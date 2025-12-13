@@ -1,14 +1,13 @@
 export const dynamic = "force-dynamic";
 
 import SearchGrid from "@/components/layout/SearchGrid";
-// import { SearchResult } from "@/types/search";
+import { headers } from "next/headers";
 
 
 export default async function SearchPage(props: { searchParams: Promise<{ q?: string }> }) {
+    
     const searchParams = await props.searchParams;
-
     const q = searchParams.q?.trim() ?? "";
-    console.log("Search query:", q);
 
     if (!q.trim()) {
         return (
@@ -19,9 +18,23 @@ export default async function SearchPage(props: { searchParams: Promise<{ q?: st
         );
     }
 
-    const response = await fetch(process.env.NEXT_PUBLIC_URL + `/api/search?q=${q}`, {
-        cache: "no-store"
+    const headerList = headers();
+    const host = (await headerList).get("host");
+    const protocol = host?.includes("localhost") ? "http" : "https";
+
+    const url = `${protocol}://${host}/api/search?q=${q}`;
+    const response = await fetch(url, {
+        cache : "no-store",
     });
+
+    if (!response.ok) {
+        return (
+            <main className="max-w-4xl mx-auto px-6 py-10">
+                <h1 className="text-2xl font-bold mb-6">Error al buscar</h1> 
+                <p className="text-muted-foreground">Hubo un problema al realizar la búsqueda. Por favor, intenta de nuevo más tarde.</p>
+            </main>
+        );
+    }
 
     const { results } = await response.json();
 
