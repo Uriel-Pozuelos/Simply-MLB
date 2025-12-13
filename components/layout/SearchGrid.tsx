@@ -22,7 +22,11 @@ export default function SearchGrid({items, title}: SearchGridProps) {
                 <p className="text-muted-foreground">No se encontraron resultados.</p>
             )}
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+            <div className="
+                    grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 
+                    lg:grid-cols-6 xl:grid-cols-8 gap-4
+                    transition-opacity duration-300 ease-in
+                    ">
                 {items.map((item) => (
                     <div
                         key={item.id}
