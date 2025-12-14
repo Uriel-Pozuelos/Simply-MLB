@@ -1,5 +1,5 @@
 export interface SearchResult {
-    id: string;
+    id: number;
     name: string;
     type: "hero" | "item" | "role" | "update"; 
     subType: string;

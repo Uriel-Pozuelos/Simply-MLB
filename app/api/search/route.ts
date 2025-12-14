@@ -17,8 +17,14 @@ export async function GET(req: Request) {
 
     // 
     const q = searchParams.get("q")?.toLowerCase() ?? "";
+    
+    const paramsRole = searchParams.get("role")?.trim() ?? "";
 
-    if (!q.trim()) {
+    const isAll = paramsRole === "all";
+    const role = isAll ? "" : paramsRole;
+
+
+    if (!q && !role && !isAll) {
         return NextResponse.json({ results: [] });
     }   
 
@@ -27,11 +33,26 @@ export async function GET(req: Request) {
     //     x.name.toLowerCase().includes(q)
     // );
 
-    const { data, error } = await supabase
+    let query = supabase
         .from("Heroes")
-        .select("id, name, type, subType, subTypeEs")
-        .ilike("name", `%${q}%`)
-        // .limit(10);
+        .select("id, name, type, subType, subTypeEs");
+
+    if (q){
+        query = query.ilike("name", `%${q}%`);
+    }
+
+    if(role){
+        query = query.or(
+            `type.eq.${role},subType.eq.${role}`
+        );
+    }
+
+    const { data, error } = await query;
+
+    if(error){
+        console.error("Supabase query error: ", error.message);
+        return NextResponse.json({results: []}, { status: 500});
+    }
     
     // console.log("Supabase search data: ", data);
 
@@ -43,15 +64,7 @@ export async function GET(req: Request) {
         role: hero.type,
         subType: hero.subType,
         subTypeEs: hero.subTypeEs,        
-    })) || [];
-
-    if(error){
-        console.error("Supabase search error: ", error.message);
-        return NextResponse.json(
-            {error: error.message, results: []},
-            { status: 500 }
-        )
-    }
+    }))  ?? [];
 
     return NextResponse.json({ results });
 }

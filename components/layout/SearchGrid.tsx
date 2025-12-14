@@ -15,7 +15,7 @@ export default function SearchGrid({items, title}: SearchGridProps) {
     return (
         <section className="max-w-11/12 mx-auto px-4 py-5">
             {title && (
-                <h1 className="text-2xl font-bold mb-6">{title}</h1>
+                <h1 className="text-2xl font-bold mb-6 text-center">{title}</h1>
             )}
 
             {items.length === 0 && (
@@ -23,10 +23,12 @@ export default function SearchGrid({items, title}: SearchGridProps) {
             )}
 
             <div className="
-                    grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 
-                    lg:grid-cols-6 xl:grid-cols-8 gap-4
-                    transition-opacity duration-300 ease-in
-                    ">
+                    grid justify-center gap-4 transition-opacity 
+                    duration-300 ease-in max-w-7xl mx-auto"
+                    style={{
+                        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                    }}
+                    >
                 {items.map((item) => (
                     <div
                         key={item.id}
