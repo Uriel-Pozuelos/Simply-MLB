@@ -18,13 +18,10 @@ export default function SearchGrid({items, title}: SearchGridProps) {
                 <h1 className="text-2xl font-bold mb-6 text-center">{title}</h1>
             )}
 
-            {items.length === 0 && (
-                <p className="text-muted-foreground">No se encontraron resultados.</p>
-            )}
-
             <div className="
-                    grid justify-center gap-4 transition-opacity 
-                    duration-300 ease-in max-w-7xl mx-auto"
+                    grid justify-center gap-4 max-w-7xl mx-auto
+                    transition-all duration-300 ease-out
+                    opacity-100 translate-y-0"
                     style={{
                         gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
                     }}
@@ -32,7 +29,9 @@ export default function SearchGrid({items, title}: SearchGridProps) {
                 {items.map((item) => (
                     <div
                         key={item.id}
-                        className="border p-4 rounded-md bg-card shadow-sm hover:shadow transition"
+                        className="border p-4 rounded-md bg-card shadow-sm hover:shadow transition
+                                    animate-in fade-in slide-in-from-bottom-2
+                                    duration-300"
                     >
                         {/* {item.imageUrl && (
                             <img
@@ -49,6 +48,10 @@ export default function SearchGrid({items, title}: SearchGridProps) {
                         )}
                     </div>
                 ))}
+                
+            {items.length === 0 && (
+                <p className="text-muted-foreground">No se encontraron resultados.</p>
+            )}
             </div>
         </section>
     );

@@ -7,6 +7,7 @@ import {useState, useEffect} from "react";
 import { searchHeroes } from "@/lib/search";
 import { SearchResult } from "@/types/search";
 import SearchGrid from "@/components/layout/SearchGrid";
+import SearchSkeleton from "@/components/layout/SearchSkeleton";
   
 
 export default function Home() {
@@ -14,6 +15,8 @@ export default function Home() {
   const [role, setRole] = useState("all");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const PAGE_SIZE = 32;
 
 
   useEffect(() => {
@@ -40,8 +43,11 @@ export default function Home() {
           <RoleFilter roles={HERO_ROLES} selectedRole={role} onChange={setRole} />
 
           {
-            !loading && (
+            loading ? (
+              <SearchSkeleton amount={PAGE_SIZE} />
+            ) : (
               <SearchGrid 
+                key={`${role}-${searchQuery}`}
                 items={results} 
                 title={searchQuery.trim() 
                     ? "Resultados de búsqueda"

@@ -23,6 +23,9 @@ export async function GET(req: Request) {
     const isAll = paramsRole === "all";
     const role = isAll ? "" : paramsRole;
 
+    // const limit = Number(searchParams.get("limit") ?? "24");
+    // const offset = Number(searchParams.get("offset") ?? "0");
+
 
     if (!q && !role && !isAll) {
         return NextResponse.json({ results: [] });
@@ -32,10 +35,12 @@ export async function GET(req: Request) {
     // const resultsMock = mock.filter((x) =>
     //     x.name.toLowerCase().includes(q)
     // );
+    
 
     let query = supabase
         .from("Heroes")
-        .select("id, name, type, subType, subTypeEs");
+        .select("id, name, type, subType, subTypeEs")
+        // .range(offset, offset + limit - 1);  
 
     if (q){
         query = query.ilike("name", `%${q}%`);

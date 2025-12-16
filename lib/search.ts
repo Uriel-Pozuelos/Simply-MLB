@@ -1,6 +1,11 @@
 import { SearchResult } from "@/types/search";
 
-export async function searchHeroes(query: string, role?: string): Promise<SearchResult[]> {
+export async function searchHeroes(
+        query: string, 
+        role?: string,
+        // offset: number = 0,
+        // limit: number = 24
+    ): Promise<SearchResult[]> {
     //Si no hay busqueda no retornamos nada
     const q = query.trim();
     const isAll = role === "all";
@@ -9,7 +14,6 @@ export async function searchHeroes(query: string, role?: string): Promise<Search
         return [];
     }
 
-
     try {
         // const res = await fetch(`/api/search?q=${query}`);
         const params = new URLSearchParams();
@@ -17,6 +21,9 @@ export async function searchHeroes(query: string, role?: string): Promise<Search
         if (q) params.append("q", q);
         if (!isAll) params.append("role", role ??  ""); 
         else params.append("role","all");
+        
+        // params.append("offset", offset.toString());
+        // params.append("limit", limit.toString());
 
         const res = await fetch(`/api/search?${params.toString()}`);
 
