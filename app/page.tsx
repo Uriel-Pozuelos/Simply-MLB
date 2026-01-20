@@ -1,60 +1,41 @@
 "use client";
 
-import { HERO_ROLES } from "@/constants/roles";
-import HomeSearch from "@/components/home/HomeSearch";
-import RoleFilter from "@/components/home/RoleFilter";
-import {useState, useEffect} from "react";
-import { searchHeroes } from "@/lib/search";
-import { SearchResult } from "@/types/search";
-import SearchGrid from "@/components/layout/SearchGrid";
-import SearchSkeleton from "@/components/layout/SearchSkeleton";
+
+import ButtonBackTop from "@/components/ui/floatingBackTop";
+
+import { HeroSection } from '@/components/home/HeroSection';
+import type { CarouselImage, NavigationItem } from '@/types';
+
+// Datos de desarrollo - después se conectará con Supabase
+const carouselImages: CarouselImage[] = [
+  { id: 1, url: 'https://placehold.co/1200x800/1E3A8A/white/png?text=Hero+1', alt: 'Hero destacado 1' },
+  { id: 2, url: 'https://placehold.co/1200x800/1E3A8A/white/png?text=Hero+2', alt: 'Hero destacado 2' },
+  { id: 3, url: 'https://placehold.co/1200x800/1E3A8A/white/png?text=Hero+3', alt: 'Hero destacado 3' },
+  { id: 4, url: 'https://placehold.co/1200x800/1E3A8A/white/png?text=Hero+4', alt: 'Hero destacado 4' },
+  { id: 5, url: 'https://placehold.co/1200x800/1E3A8A/white/png?text=Hero+5', alt: 'Hero destacado 5' },
+  { id: 6, url: 'https://placehold.co/1200x800/1E3A8A/white/png?text=Hero+6', alt: 'Hero destacado 6' },
+];
+
+const navigationItems: NavigationItem[] = [
+  { id: 1, title: 'Heroes', color: 'bg-blue-600', link: '/heroes' },
+  { id: 2, title: 'Items', color: 'bg-purple-600', link: '/items' },
+  { id: 3, title: 'Tierlist', color: 'bg-red-600', link: '/tierlist' },
+  { id: 4, title: 'Actualizaciones', color: 'bg-green-600', link: '/updates' },
+];
   
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [role, setRole] = useState("all");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const PAGE_SIZE = 32;
-
-
-  useEffect(() => {
-    
-      const debounce = setTimeout(async () => {
-        setLoading(true);
-
-        const data = await searchHeroes(searchQuery, role);
-        setResults(data);
-
-        setLoading(false);
-      }, 400);
-
-      return () => clearTimeout(debounce);
-    
-  }, [searchQuery, role]);
   
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50  dark:bg-black">
-      <main className="flex min-h-screen w-full flex-col items-center gap-y-5 py-5 bg-white dark:bg-black sm:items-start">
+    <div className="flex items-center justify-center bg-zinc-50  dark:bg-black">
+      <main className="flex min-h-screen w-full flex-col items-center gap-y-3 bg-white dark:bg-black sm:items-start">
           
-          <HomeSearch value={searchQuery} onChange={setSearchQuery} />
+            <HeroSection 
+                carouselImages={carouselImages} 
+                navigationItems={navigationItems} 
+            />
 
-          <RoleFilter roles={HERO_ROLES} selectedRole={role} onChange={setRole} />
-
-          {
-            loading ? (
-              <SearchSkeleton amount={PAGE_SIZE} />
-            ) : (
-              <SearchGrid 
-                key={`${role}-${searchQuery}`}
-                items={results} 
-                title={searchQuery.trim() 
-                    ? "Resultados de búsqueda"
-                    : ""
-                } />
-            )
-          }
+          <ButtonBackTop />
       </main>
     </div>
   );
